@@ -32,6 +32,6 @@ if __name__ == "__main__":
     while (pointer < len(d)):
         if d[pointer] in [1,2,99]:
             d = process(d, d[pointer: pointer+4])
-            #print(d[pointer: pointer+4])
+            
         pointer = pointer + 4
     print("Output:", d)
