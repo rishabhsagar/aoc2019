@@ -1613,7 +1613,7 @@ INSERT INTO orbitmap (cog, orbiter) values ( 'B2D','6YV');
 INSERT INTO orbitmap (cog, orbiter) values ( 'R36','S8M');
 
 
-
+-- Part 1
 WITH RECURSIVE orbiters as (
 SELECT
   orbiter, cog
@@ -1625,4 +1625,42 @@ FROM orbitmap om inner join orbiters o ON om.orbiter = o.cog
 ) SELECT
   	count(1)
 FROM
-  orbiters
+  orbiters;
+
+-- Part 2
+SELECT count(1) FROM
+(
+SELECT jumps,count(*) as cc FROM
+(
+  WITH RECURSIVE orbiters as (
+  SELECT
+    orbiter, cog
+  FROM orbitmap WHERE orbiter = 'SAN'
+  UNION ALL
+    SELECT
+        om.orbiter, om.cog
+  FROM orbitmap om inner join orbiters o ON om.orbiter = o.cog
+  ) SELECT
+        orbiter || '->' || cog as JUMPS
+  FROM
+    orbiters
+  WHERE orbiter <> 'SAN'
+  UNION ALL
+  (
+      WITH RECURSIVE orbiters as (
+  		SELECT
+    		orbiter, cog
+  		FROM orbitmap WHERE orbiter = 'YOU'
+  		UNION ALL
+    	SELECT
+        	om.orbiter, om.cog
+  		FROM orbitmap om inner join orbiters o ON om.orbiter = o.cog
+  		) SELECT
+        	orbiter || '->' || cog as JUMPS
+  		FROM
+    		orbiters
+  		WHERE orbiter <> 'YOU'
+   )
+) S
+group by jumps having count(1) = 1
+) PATH;
